@@ -70,108 +70,6 @@ make a histogram - male, weightclass, distro of deadlifts
 """
 
 
-sex_val = 'Male'
-lift_val = 'Squat'
-male_year_value = 66
-
-if Sex_Values.index(sex_val)==0:
-    year_value = male_year_value
-else:
-    year_value = fe_year_value
-
-sex_ind = Sex_Values.index(sex_val)
-weight_ind = wclasses[Sex_Values.index(sex_val)].index(year_value)
-lift_ind = Lift_Values.index(lift_val)
-#hist_data = lift_set[Sex_Values.index(sex_val)][wclasses[Sex_Values.index(sex_val)].index(year_value)]
-
-
-hist_x_data = hist_bins
-hist_y_data = lifts_hist_data[lift_ind][sex_ind][weight_ind]
-hist_hover_labels = lifts_labels[lift_ind][sex_ind][weight_ind]
-
-hist_lb_data = [i*2.20462 for i in hist_x_data]
-hist_lb_low_data =  [(i-11) for i in hist_lb_data]
-#print(hist_hover_labels)
-
-arr1 = np.array(hist_lb_data)
-arr2 = np.array(hist_lb_low_data)
-
-figXXX = go.Figure(go.Bar(x=hist_x_data, y=hist_y_data))
-
-#print(np.dstack((arr1,arr2)))
-
-figXXX.update_traces(customdata=arr1,
-        hovertemplate = '<b>Weight Lifted in kg: (\u00B1 5)</b>: %{x:.0f} kg <br>'+\
-        '<b>Weight Lifted in lbs:</b>: %{customdata:.0f} lbs <br>'
-        #'test string {}'.format(x),
-        )
-
-newdats = np.stack((arr1,arr2),axis=-1)
-
-figXXX.update_traces(customdata=newdats,
-        hovertemplate = "<b> Point props<br>"+\
-                   "x: %{x}<br>"+\
-                   "y: %{y}<br>"+\
-                   "attr1: %{customdata[0]: .2f}<br>"+\
-                   "attr2: %{customdata[1]: .3f}")
-        #'test string {}'.format(x),
-
-
-
-
-"""
-figXXX = go.Figure(go.Scatter(x=np.random.randint(3,9, 7),
-                 y=np.random.randint(-8, -3, 7),
-                 mode='markers',
-                 marker_size=18))
-
-
-
-
-num_attr =[2.4, 6.12, 4.5, 2.358, 8.23, 5.431, 7.4]
-
-figXXX.update_traces(customdata=num_attr,
-                   hovertemplate = "<b> Point prop<br>"+\
-                   "x: %{x}<br>"+\
-                   "y: %{y}<br>"+\
-                   "attr: %{customdata: .2f}");
-figXXX.update_layout(title='Scatterplot with hovertemplate from customdata with a single array')
-
-
-new_customdata = np.stack((num_attr, 100*np.random.rand(7)), axis=-1)
-new_customdata
-
-
-figXXX.update_traces(customdata = new_customdata,
-                    hovertemplate = "<b> Point props<br>"+\
-                   "x: %{x}<br>"+\
-                   "y: %{y}<br>"+\
-                   "attr1: %{customdata[0]: .2f}<br>"+\
-                   "attr2: %{customdata[1]: .3f}")
-figXXX.update_layout(title='Scatterplot with hovertemplate from   customdata of a two arrays')
-"""
-    #print(sex_val)
-
-
-#print(year_value)
-#print(lift_val)
-
-#lift_set = lifts[Lift_Values.index(lift_val)]
-
-#print(lift_set)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 outprint("Plotting Data")
 
@@ -202,7 +100,7 @@ app.layout = html.Div([
 
 
 
-    dcc.Graph(id='indicator-graphic',figure=figXXX),
+    dcc.Graph(id='indicator-graphic'),
 
     html.Label('Weight Class: Male', id='male-weight-class'),
 
@@ -296,21 +194,12 @@ def update_graph(sex_val,lift_val,fe_year_value,male_year_value):
     hist_hover_labels = lifts_labels[lift_ind][sex_ind][weight_ind]
 
     hist_lb_data = [i*2.20462 for i in hist_x_data]
-    hist_lb_low_data =  [(i+11) for i in hist_lb_data]
-    hist_kg_high_data = [(i+5) for i in hist_x_data]
     #print(hist_hover_labels)
 
-    arr1 = np.array(hist_lb_data)
-    arr2 = np.array(hist_lb_low_data)
-    arr3 = np.array(hist_kg_high_data)
-
-    newdataX = np.stack((arr1,arr2,arr3),axis=-1)
-
-    #print(type(arr2))
     fig10 = {
-        'data': [go.Bar(x=hist_x_data, y=hist_y_data, customdata=newdataX,
-                hovertemplate = '<b>Weight Lifted in kg:</b>: %{x:.0f} - %{customdata[2]:.0f} kg <br>'+
-                '<b>Weight Lifted in lbs:</b>: %{customdata[0]:.0f} - %{customdata[1]:.0f} lbs <br>'+
+        'data': [go.Bar(x=hist_x_data, y=hist_y_data, customdata=hist_lb_data,
+                hovertemplate = '<b>Weight Lifted in kg: (\u00B1 5)</b>: %{x:.0f} kg <br>'+
+                '<b>Weight Lifted in lbs: (\u00B1 10)</b>: %{customdata:.0f} lbs <br>'+
                 '<b>Number of Lifters in Weight Range: </b>: %{y:.0f}<br>'+
                 '<b>Percent of Lifters Stronger Than This</b>: %{text:.1f}%   <extra></extra>',
                 #'test string {}'.format(x),
@@ -323,7 +212,7 @@ def update_graph(sex_val,lift_val,fe_year_value,male_year_value):
                 'title': 'Weight Lifted(kg)',
                 'textfont' : dict(
                     family="Georgia",
-                    size=360,
+                    size=72,
                     #color="#7f7f7f"
                 )
             },
@@ -339,17 +228,9 @@ def update_graph(sex_val,lift_val,fe_year_value,male_year_value):
             bargroupgap=0.1 # gap between bars of the same location coordinates
         )
     }
-#
-#    fig10.update_traces(customdata= [hist_lb_data,hist_lb_low_data],
-#
-#                hovertemplate = '<b>Weight Lifted in kg: (\u00B1 5)</b>: %{x:.0f} kg <br>'+
-#                '<b>Weight Lifted in lbs: (\u00B1 10)</b>: %{customdata[0]:.0f} lbs <br>'+
-#                '<b>Weight Lifted in lbs: (\u00B1 10)</b>: %{customdata[1]:.0f} lbs <br>'+
-#                '<b>Number of Lifters in Weight Range: </b>: %{y:.0f}<br>'+
-#                '<b>Percent of Lifters Stronger Than This</b>: %{text:.1f}%   <extra></extra>',
-#    )
 
     return fig10
+
 
 
 @app.callback(Output('malesliderContainer', 'style'),
