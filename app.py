@@ -27,6 +27,7 @@ def outprint(stringx):
 
 outprint("Loading Data")
 
+server = app.server
 
 Sex = ['M','F']
 Sex_Values = ['Male','Female']
@@ -76,6 +77,7 @@ make a histogram - male, weightclass, distro of deadlifts
 
 sex_val = 'Male'
 lift_val = 'Squat'
+equip_val = 'Raw'
 male_year_value = 66
 
 if Sex_Values.index(sex_val)==0:
@@ -83,6 +85,7 @@ if Sex_Values.index(sex_val)==0:
 else:
     year_value = fe_year_value
 
+equip_ind = equip_types.index(equip_val)
 sex_ind = Sex_Values.index(sex_val)
 weight_ind = wclasses[Sex_Values.index(sex_val)].index(year_value)
 lift_ind = Lift_Values.index(lift_val)
@@ -90,8 +93,8 @@ lift_ind = Lift_Values.index(lift_val)
 
 
 hist_x_data = hist_bins
-hist_y_data = lifts_hist_data[lift_ind][sex_ind][weight_ind]
-hist_hover_labels = lifts_labels[lift_ind][sex_ind][weight_ind]
+hist_y_data = lifts_hist_data[lift_ind][sex_ind][weight_ind][equip_ind]
+hist_hover_labels = lifts_labels[lift_ind][sex_ind][weight_ind][equip_ind]
 
 hist_lb_data = [i*2.20462 for i in hist_x_data]
 hist_lb_low_data =  [(i-11) for i in hist_lb_data]
@@ -204,6 +207,16 @@ app.layout = html.Div([
             ],
             style={'width': '20%', 'display': 'inline-block'}),
 
+            html.Div([
+                dcc.RadioItems(
+                    id='equip-type',
+                    options=[{'label': i, 'value': i} for i in equip_types],
+                    value=equip_types[0],
+                    labelStyle={'display': 'inline-block'}
+                )
+            ],
+            style={'width': '15%', 'padding-right':'10%', 'display': 'inline-block'}),
+
 
 
     dcc.Graph(id='indicator-graphic',figure=figXXX),
@@ -270,9 +283,10 @@ app.layout = html.Div([
     Output('indicator-graphic', 'figure'),
     [Input('sex-type', 'value'),
     Input('lift-type', 'value'),
+    Input('equip-type', 'value'),
     Input('female-year--slider', 'value'),
     Input('male-year--slider', 'value')])
-def update_graph(sex_val,lift_val,fe_year_value,male_year_value):
+def update_graph(sex_val,lift_val,equip_val,fe_year_value,male_year_value):
 
 
     #print(sex_val)
@@ -289,6 +303,7 @@ def update_graph(sex_val,lift_val,fe_year_value,male_year_value):
 
     #print(lift_set)
 
+    equip_ind = equip_types.index(equip_val)
     sex_ind = Sex_Values.index(sex_val)
     weight_ind = wclasses[Sex_Values.index(sex_val)].index(year_value)
     lift_ind = Lift_Values.index(lift_val)
@@ -296,8 +311,8 @@ def update_graph(sex_val,lift_val,fe_year_value,male_year_value):
 
 
     hist_x_data = hist_bins
-    hist_y_data = lifts_hist_data[lift_ind][sex_ind][weight_ind]
-    hist_hover_labels = lifts_labels[lift_ind][sex_ind][weight_ind]
+    hist_y_data = lifts_hist_data[lift_ind][sex_ind][weight_ind][equip_ind]
+    hist_hover_labels = lifts_labels[lift_ind][sex_ind][weight_ind][equip_ind]
 
     hist_lb_data = [i*2.20462 for i in hist_x_data]
     hist_lb_low_data =  [(i+11) for i in hist_lb_data]

@@ -11,8 +11,8 @@ def outprint(stringx):
 
 outprint("starting to read data finished")
 
-df = pd.read_csv("datasets/test-dataset.csv")
-#df = pd.read_csv("datasets/openpowerlifting-2020-05-10.csv")
+#df = pd.read_csv("datasets/test-dataset.csv")
+df = pd.read_csv("datasets/openpowerlifting-2020-05-10.csv")
 
 
 outprint("data reading finished")
@@ -88,9 +88,13 @@ for ind in df.index:
     best_bench = df['Best3BenchKg'][ind]
     person_equipment =  df['Equipment'][ind]
 
-    if person_equipment in ['Straps','Wraps','Raw']:
+    if person_equipment in ['Straps']:
+        print("person_equipment is straps")
+        print("lift vals are {} {} {}".format(best_dl,best_squat,best_bench))
+
+    if person_equipment in ['Straps','Raw']:
         person_equipment = 'Raw'
-    elif (person_equipment == 'Single-ply') or (person_equipment == 'Multi-ply'):
+    elif person_equipment in ['Single-ply','Wraps','Multi-ply']:
         person_equipment = 'Equipped'
     else:
         print("equipment type not found")
