@@ -31,6 +31,10 @@ outprint("Loading Data")
 Sex = ['M','F']
 Sex_Values = ['Male','Female']
 Lift_Values = ['Squat','Bench','Deadlift']
+
+equip_avaliable_types = ['Single-ply', 'Multi-ply', 'Wraps', 'Raw','Straps']
+equip_types = ['Raw','Equipped','All']
+
 m_weightclasses = [59, 66, 74, 83, 93, 105, 120,128]
 f_weighclasses = [47, 52, 57, 63, 72, 84,90]
 wclasses =[m_weightclasses,f_weighclasses]
