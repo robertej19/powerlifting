@@ -194,7 +194,7 @@ app.layout = html.Div([
                     labelStyle={'display': 'inline-block'}
                 )
             ],
-            style={'width': '15%', 'padding-left':'30%', 'display': 'inline-block'}),
+            style={'width': '20%', 'padding-left':'10%', 'display': 'inline-block'}),
 
 
             html.Div([
@@ -205,7 +205,7 @@ app.layout = html.Div([
                     labelStyle={'display': 'inline-block'}
                 )
             ],
-            style={'width': '20%', 'display': 'inline-block'}),
+            style={'width': '30%', 'display': 'inline-block'}),
 
             html.Div([
                 dcc.RadioItems(
@@ -215,11 +215,11 @@ app.layout = html.Div([
                     labelStyle={'display': 'inline-block'}
                 )
             ],
-            style={'width': '15%', 'padding-right':'10%', 'display': 'inline-block'}),
+            style={'width': '40%', 'display': 'inline-block'}),
 
 
 
-    dcc.Graph(id='indicator-graphic',figure=figXXX),
+    dcc.Graph(id='indicator-graphic',figure=figXXX, config={'displayModeBar':False}),
 
     html.Label('Weight Class: Male', id='male-weight-class'),
 
@@ -284,11 +284,20 @@ app.layout = html.Div([
     [Input('sex-type', 'value'),
     Input('lift-type', 'value'),
     Input('equip-type', 'value'),
+    Input('indicator-graphic', 'hoverData'),
     Input('female-year--slider', 'value'),
     Input('male-year--slider', 'value')])
-def update_graph(sex_val,lift_val,equip_val,fe_year_value,male_year_value):
+def update_graph(sex_val,lift_val,equip_val,hoverdata,fe_year_value,male_year_value):
 
-
+    globalblue = '#1670b5'
+    colors = [globalblue,]*100
+    if hoverdata:
+        x_val = hoverdata['points']
+        #print(type(x_val))
+        xx = x_val[0]
+        x_ind = xx['pointNumber']
+        colors[x_ind] = '#59e94a' #green
+        #colors[x_ind] = '#e9524a' #red
     #print(sex_val)
 
     if Sex_Values.index(sex_val)==0:
@@ -325,15 +334,21 @@ def update_graph(sex_val,lift_val,equip_val,fe_year_value,male_year_value):
 
     newdataX = np.stack((arr1,arr2,arr3),axis=-1)
 
+
     #print(type(arr2))
     fig10 = {
-        'data': [go.Bar(x=hist_x_data, y=hist_y_data, customdata=newdataX,
+        'data': [go.Bar(x=hist_x_data, y=hist_y_data, customdata=newdataX, marker_color = colors,
                 hovertemplate = '<b>Weight Lifted in kg:</b>: %{x:.0f} - %{customdata[2]:.0f} kg <br>'+
                 '<b>Weight Lifted in lbs:</b>: %{customdata[0]:.0f} - %{customdata[1]:.0f} lbs <br>'+
                 '<b>Number of Lifters in Weight Range: </b>: %{y:.0f}<br>'+
                 '<b>Percent of Lifters Stronger Than This</b>: %{text:.1f}%   <extra></extra>',
                 #'test string {}'.format(x),
-                text = hist_hover_labels),
+                text = hist_hover_labels,
+                hoverlabel = {
+                'bgcolor': globalblue,
+                'font': {'color':'white'}
+                }
+                )
                        #hovertext=hist_hover_labels)
             ],
         'layout': dict(
@@ -344,7 +359,9 @@ def update_graph(sex_val,lift_val,equip_val,fe_year_value,male_year_value):
                     family="Georgia",
                     size=360,
                     #color="#7f7f7f"
-                )
+                ),
+                'tickvals' : [100,200,300,400,500],
+                'ticktext' : ['100 kg / 220 lbs','200 kg / 441 lbs','300 kg / 661 lbs','400 kg / 882 lbs','500 kg / 1102 lbs']
             },
             yaxis={
                 'title': "Number of Lifters"
@@ -369,6 +386,37 @@ def update_graph(sex_val,lift_val,equip_val,fe_year_value,male_year_value):
 #    )
 
     return fig10
+
+
+
+
+"""
+@app.callback(Output('indicator-graphic', 'layout'),
+    [Input('indicator-graphic', 'hoverData')])
+def update_slide(hoverdata):
+
+
+
+    x_val = hoverdata['points']
+    #print(type(x_val))
+    xx = x_val[0]
+    x_ind = xx['pointNumber']
+
+    colors = ['#1670b5',]*100
+    #colors[25] = '#59e94a' #green
+    colors[25] = '#e9524a' #red
+
+    marker_color = colors
+
+    return
+"""
+    #print(xx_val)
+    #if ind == 0:
+    #    return {}
+    #else:
+    #    print(hoverdata)
+        #return {'display': 'none'}
+
 
 
 @app.callback(Output('malesliderContainer', 'style'),
