@@ -16,6 +16,7 @@ div {
   margin-right: 20%;
   margin-left: 20%;
   background-color: white;
+  justify-content: center;
 }
 
 iframe.example {  width: 80%;  height: 600px; }

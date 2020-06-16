@@ -360,8 +360,8 @@ def update_graph(sex_val,lift_val,equip_val,hoverdata,fe_year_value,male_year_va
                     size=360,
                     #color="#7f7f7f"
                 ),
-                'tickvals' : [100,200,300,400,500],
-                'ticktext' : ['100 kg / 220 lbs','200 kg / 441 lbs','300 kg / 661 lbs','400 kg / 882 lbs','500 kg / 1102 lbs']
+                'tickvals' : [100,200,300,400],
+                'ticktext' : ['100 kg / 220 lbs','200 kg / 441 lbs','300 kg / 661 lbs','400 kg / 882 lbs']
             },
             yaxis={
                 'title': "Number of Lifters"
